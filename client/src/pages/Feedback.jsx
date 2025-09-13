@@ -46,7 +46,7 @@ const FeedbackPage = () => {
   const avgRating =
     feedbacks.reduce((acc, f) => acc + (f.rating || 0), 0) /
     (feedbacks.length || 1);
-
+  //35/7 = 5
   const ratingsPerCourse = feedbacks.reduce((acc, f) => {
     const course = f.course?.title || "Unknown";
     acc[course] = (acc[course] || 0) + 1;
@@ -55,6 +55,7 @@ const FeedbackPage = () => {
 
   // ================= User Functions =================
   const fetchEnrolledCourses = async () => {
+    setLoading(true); // start loading
     try {
       const { data } = await axios.get(
         "http://localhost:8080/api/v1/enrollments/me",
@@ -63,6 +64,8 @@ const FeedbackPage = () => {
       setEnrolledCourses(data.map((e) => e.course));
     } catch (err) {
       console.error("Error fetching enrolled courses:", err);
+    } finally {
+      setLoading(false); // stop loading
     }
   };
 
@@ -79,6 +82,8 @@ const FeedbackPage = () => {
 
       alert("Feedback submitted!");
       fetchEnrolledCourses();
+      setCourseMessage((prev) => ({ ...prev, [courseId]: "" }));
+      setCourseRating((prev) => ({ ...prev, [courseId]: "" }));
     } catch (err) {
       console.error("Error submitting feedback:", err);
       alert("Error submitting feedback");

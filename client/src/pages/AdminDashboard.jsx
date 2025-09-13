@@ -62,12 +62,12 @@ const AdminDashboard = () => {
   }));
 
   const COLORS = [
-    "#B087CF",
-    "#6B46C1",
-    "#ECC94B",
-    "#48BB78",
-    "#4299E1",
-    "#F56565",
+    "#7A5FA8",
+    "#553098",
+    "#C6A300",
+    "#2F855A",
+    "#2B6CB0",
+    "#C53030",
   ];
 
   return (
@@ -123,7 +123,6 @@ const AdminDashboard = () => {
       )}
 
       {/* Analytics Cards */}
-      {/* Analytics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Total Feedbacks */}
         <div className="bg-gradient-to-r from-purple-400 to-purple-600 text-white p-6 rounded-2xl shadow-lg transform hover:scale-105 transition">
@@ -146,7 +145,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Feedbacks per Course (Pie Chart) */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-400 text-white p-6 rounded-2xl shadow-lg transform hover:scale-105 transition">
+        <div className="bg-gradient-to-r from-yellow-400 to-yellow-800 text-white p-6 rounded-2xl shadow-lg transform hover:scale-105 transition">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-lg font-semibold">Feedbacks per Course</h3>
             <span className="text-2xl">📊</span>

@@ -17,14 +17,6 @@ export default function SignupPage() {
       return setError("Only @gmail.com emails are allowed.");
     }
 
-    const passwordRegex =
-      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
-    if (!passwordRegex.test(form.password)) {
-      return setError(
-        "Password must be at least 6 characters, include 1 uppercase, 1 number, and 1 special symbol."
-      );
-    }
-
     try {
       await api.post("/auth/signup", form);
       alert("Signup successful, please login.");

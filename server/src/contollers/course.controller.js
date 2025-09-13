@@ -36,7 +36,7 @@ export const listCourses = async (req, res, next) => {
 // Top rated courses
 export const topRated = async (req, res, next) => {
   try {
-    const courses = await Course.find({ rating: { $gt: 4 } })
+    const courses = await Course.find({ rating: { $gt: 3 } })
       .sort({ rating: -1 })
       .populate("instructor", "name email");
     res.json(courses);

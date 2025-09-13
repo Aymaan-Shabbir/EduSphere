@@ -23,7 +23,7 @@ const AddInstructor = () => {
       });
 
       alert("Instructor added successfully!");
-      setForm({ name: "", email: "", bio: "" });
+      setForm({ name: "", email: "", bio: "" }); //reset useState form
     } catch (err) {
       console.error(
         "Error adding instructor:",

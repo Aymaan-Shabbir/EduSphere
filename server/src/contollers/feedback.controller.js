@@ -13,11 +13,11 @@ export const submitFeedback = async (req, res, next) => {
       user: userId,
       course: courseId,
     });
-    if (!enrolled)
+    if (!enrolled) {
       return res
         .status(403)
         .json({ message: "You are not enrolled in this course" });
-
+    }
     // Save feedback
     await Feedback.create({ user: userId, course: courseId, message, rating });
 

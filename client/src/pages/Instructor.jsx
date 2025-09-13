@@ -112,13 +112,13 @@ const Instructors = ({ user }) => {
                     onClick={() => openEditModal(ins)}
                     className="flex-1 bg-[#B087CF] text-white px-4 py-2 rounded-lg hover:bg-[#9a6dc1] transition"
                   >
-                    ✏️ Edit
+                     Edit
                   </button>
                   <button
                     onClick={() => handleDelete(ins._id)}
                     className="flex-1 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
                   >
-                    🗑️ Delete
+                     Delete
                   </button>
                 </div>
               )}
@@ -135,7 +135,7 @@ const Instructors = ({ user }) => {
               onClick={() => setShowEditModal(false)}
               className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 font-bold"
             >
-              ✕
+              X
             </button>
             <h3 className="text-xl font-bold mb-4">Edit Instructor</h3>
             <input

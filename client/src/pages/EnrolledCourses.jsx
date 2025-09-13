@@ -160,10 +160,10 @@ const EnrolledPage = ({ user }) => {
                 <b>Category:</b> {course?.category || "N/A"}
               </p>
               <p>
-                <b>Rating:</b> ⭐ {course?.rating ?? "N/A"}
-              </p>
-              <p>
-                <b>Instructor:</b> {course?.instructor?.name || "Unknown"}
+                <b>Rating:</b> ⭐{" "}
+                {typeof course?.rating === "number"
+                  ? Math.round(course.rating * 100) / 100
+                  : "N/A"}
               </p>
             </div>
 
@@ -173,7 +173,7 @@ const EnrolledPage = ({ user }) => {
               disabled={!course?._id}
               className="mt-4 w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition relative z-10"
             >
-              🗑️ Unenroll
+              Unenroll
             </button>
           </div>
         ))}

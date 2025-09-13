@@ -8,7 +8,7 @@ const AddCourse = ({ onClose }) => {
     category: "",
     rating: 0,
     image: "",
-    videoUrl: "", // ✅ Added videoUrl
+    videoUrl: "",
     instructor: "",
   });
   const [instructors, setInstructors] = useState([]);
@@ -33,6 +33,7 @@ const AddCourse = ({ onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    //default methods prevent
 
     const token = localStorage.getItem("token");
     if (!token) {
@@ -52,7 +53,7 @@ const AddCourse = ({ onClose }) => {
         category: "",
 
         image: "",
-        videoUrl: "", // reset
+
         instructor: "",
       });
 
@@ -93,14 +94,7 @@ const AddCourse = ({ onClose }) => {
           onChange={handleChange}
           className="border p-2 rounded"
         />
-        <input
-          type="text"
-          name="videoUrl"
-          placeholder="Course Video URL"
-          value={form.videoUrl}
-          onChange={handleChange}
-          className="border p-2 rounded"
-        />
+
         <select
           name="category"
           value={form.category}

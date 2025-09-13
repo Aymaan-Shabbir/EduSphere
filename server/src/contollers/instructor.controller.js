@@ -14,8 +14,7 @@ export const listInstructors = async (req, res) => {
 // Create instructor
 export const createInstructor = async (req, res) => {
   try {
-    const instructor = new Instructor(req.body);
-    await instructor.save();
+    const instructor = await Instructor.create(req.body); // one-liner
     res.status(201).json(instructor);
   } catch (err) {
     res.status(400).json({ message: "Error creating instructor" });
@@ -32,8 +31,9 @@ export const updateInstructor = async (req, res) => {
         new: true,
       }
     ).populate("courses");
-    if (!updated)
+    if (!updated) {
       return res.status(404).json({ message: "Instructor not found" });
+    }
     res.json(updated);
   } catch (err) {
     res.status(400).json({ message: "Error updating instructor" });
@@ -44,9 +44,10 @@ export const updateInstructor = async (req, res) => {
 export const deleteInstructor = async (req, res) => {
   try {
     const instructor = await Instructor.findById(req.params.id);
-    if (!instructor)
+    if (!instructor) {
       return res.status(404).json({ message: "Instructor not found" });
-
+    }
+    // first delete instrctor assigned to course , then delete instructor
     // Remove instructor from courses
     await Course.updateMany(
       { instructor: instructor._id },
