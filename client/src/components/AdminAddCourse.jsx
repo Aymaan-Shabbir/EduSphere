@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "./Toaster"; // Import the toast function
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 const AddCourse = ({ onClose }) => {
   const [form, setForm] = useState({
     title: "",
@@ -21,6 +23,7 @@ const AddCourse = ({ onClose }) => {
         setInstructors(res.data);
       } catch (err) {
         console.error("Error fetching instructors:", err);
+        toast("Failed to fetch instructors", "error");
       }
     };
     fetchInstructors();
@@ -33,11 +36,10 @@ const AddCourse = ({ onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //default methods prevent
 
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("Unauthorized! Please log in as admin.");
+      toast("Unauthorized! Please log in as admin.", "error");
       return;
     }
 
@@ -46,21 +48,22 @@ const AddCourse = ({ onClose }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      alert("Course added successfully!");
+      toast("Course added successfully!", "success");
+
       setForm({
         title: "",
         description: "",
         category: "",
-
+        rating: 0,
         image: "",
-
+        videoUrl: "",
         instructor: "",
       });
 
       if (onClose) onClose(); // Close modal if provided
     } catch (err) {
       console.error("Error adding course:", err.response?.data || err.message);
-      alert("Error adding course");
+      toast("Error adding course", "error");
     }
   };
 
@@ -85,7 +88,6 @@ const AddCourse = ({ onClose }) => {
           className="border p-2 rounded"
           required
         />
-
         <input
           type="text"
           name="image"
@@ -94,7 +96,6 @@ const AddCourse = ({ onClose }) => {
           onChange={handleChange}
           className="border p-2 rounded"
         />
-
         <select
           name="category"
           value={form.category}

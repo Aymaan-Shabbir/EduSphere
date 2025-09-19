@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import FeedbackTable from "../components/FeedackTable";
 import Loader from "../components/Loader";
+import { toast } from "../components/Toaster"; // import toast
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 const FeedbackPage = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,6 +38,7 @@ const FeedbackPage = () => {
       setFeedbacks(data);
     } catch (err) {
       console.error("Error fetching feedbacks", err);
+      toast("Failed to fetch feedbacks", "error");
     } finally {
       setLoading(false);
     }
@@ -44,7 +48,7 @@ const FeedbackPage = () => {
   const avgRating =
     feedbacks.reduce((acc, f) => acc + (f.rating || 0), 0) /
     (feedbacks.length || 1);
-  //35/7 = 5
+
   const ratingsPerCourse = feedbacks.reduce((acc, f) => {
     const course = f.course?.title || "Unknown";
     acc[course] = (acc[course] || 0) + 1;
@@ -53,7 +57,7 @@ const FeedbackPage = () => {
 
   // ================= User Functions =================
   const fetchEnrolledCourses = async () => {
-    setLoading(true); // start loading
+    setLoading(true);
     try {
       const { data } = await axios.get(`${API_BASE}/enrollments/me`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -61,8 +65,9 @@ const FeedbackPage = () => {
       setEnrolledCourses(data.map((e) => e.course));
     } catch (err) {
       console.error("Error fetching enrolled courses:", err);
+      toast("Failed to fetch your courses", "error");
     } finally {
-      setLoading(false); // stop loading
+      setLoading(false);
     }
   };
 
@@ -77,13 +82,13 @@ const FeedbackPage = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      alert("Feedback submitted!");
+      toast("Feedback submitted!", "success");
       fetchEnrolledCourses();
       setCourseMessage((prev) => ({ ...prev, [courseId]: "" }));
       setCourseRating((prev) => ({ ...prev, [courseId]: "" }));
     } catch (err) {
       console.error("Error submitting feedback:", err);
-      alert("Error submitting feedback");
+      toast("Failed to submit feedback", "error");
     }
   };
 

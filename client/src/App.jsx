@@ -17,10 +17,12 @@ import ErrorPage from "./pages/Error";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminRoute from "./components/AdminRoute";
 import Footer from "./components/Footer";
+import Toaster from "./components/Toaster";
 
 function App() {
   return (
     <Router>
+      <Toaster />
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Landing />} />

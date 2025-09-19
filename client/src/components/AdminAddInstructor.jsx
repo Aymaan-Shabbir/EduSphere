@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { toast } from "./Toaster"; // Import the toast function
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 const AddInstructor = () => {
   const [form, setForm] = useState({ name: "", email: "", bio: "" });
 
@@ -13,7 +15,7 @@ const AddInstructor = () => {
 
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("Unauthorized! Please log in as admin.");
+      toast("Unauthorized! Please log in as admin.", "error");
       return;
     }
 
@@ -22,20 +24,21 @@ const AddInstructor = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      alert("Instructor added successfully!");
-      setForm({ name: "", email: "", bio: "" }); //reset useState form
+      toast("Instructor added successfully!", "success");
+
+      setForm({ name: "", email: "", bio: "" }); // reset form
     } catch (err) {
       console.error(
         "Error adding instructor:",
         err.response?.data || err.message
       );
-      alert("Error adding instructor");
+      toast("Error adding instructor", "error");
     }
   };
 
   return (
-    <div className="p-4 border rounded-lg shadow-md">
-      <h2 className="text-lg font-semibold mb-2">Add Instructor</h2>
+    <div className="p-4 border rounded-lg shadow-md w-full max-w-md">
+      <h2 className="text-lg font-semibold mb-2 text-center">Add Instructor</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <input
           type="text"
@@ -62,7 +65,10 @@ const AddInstructor = () => {
           onChange={handleChange}
           className="border p-2 rounded"
         />
-        <button type="submit" className="bg-blue-500 text-white py-2 rounded">
+        <button
+          type="submit"
+          className="bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+        >
           Add Instructor
         </button>
       </form>

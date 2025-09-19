@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Loader from "../components/Loader";
+import { toast } from "../components/Toaster"; // import your toast function
 
 const Support = () => {
   const [query, setQuery] = useState({ subject: "", message: "" });
@@ -16,21 +17,19 @@ const Support = () => {
   const currentUser = JSON.parse(localStorage.getItem("user")) || null;
   const token = localStorage.getItem("token");
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
   // Fetch tickets
   const fetchTickets = async () => {
     setLoading(true);
-    // first get the url, for adnmin or for user
     try {
       let url = "";
       if (currentUser?.role === "admin") {
         url = `${API_BASE}/support${
           statusFilter !== "all" ? `?status=${statusFilter}` : ""
         }`;
-        //for admin
       } else {
         url = `${API_BASE}/support/me`;
       }
-      // for user
 
       const { data } = await axios.get(url, {
         headers: { Authorization: `Bearer ${token}` },
@@ -39,6 +38,7 @@ const Support = () => {
       setTickets(data);
     } catch (err) {
       console.error("Error fetching tickets", err);
+      toast("Failed to fetch tickets", "error");
     } finally {
       setLoading(false);
     }
@@ -58,9 +58,10 @@ const Support = () => {
       });
       setQuery({ subject: "", message: "" });
       fetchTickets();
-      alert("Support ticket submitted!");
+      toast("Support ticket submitted!", "success");
     } catch (err) {
       console.error("Error submitting ticket", err);
+      toast("Failed to submit ticket", "error");
     }
   };
 
@@ -79,7 +80,10 @@ const Support = () => {
 
   // Admin: submit response
   const handleAnswerSubmit = async () => {
-    if (!adminResponse.trim()) return;
+    if (!adminResponse.trim()) {
+      toast("Response cannot be empty", "error");
+      return;
+    }
     try {
       await axios.put(
         `${API_BASE}/support/${selectedTicket._id}/answer`,
@@ -88,14 +92,19 @@ const Support = () => {
       );
       fetchTickets();
       closeModal();
+      toast("Ticket answered successfully!", "success");
     } catch (err) {
       console.error("Error answering ticket", err);
+      toast("Failed to answer ticket", "error");
     }
   };
 
   // Admin: close ticket
   const handleClose = async (id) => {
-    if (!window.confirm("Are you sure you want to close this ticket?")) return;
+    const confirm = window.confirm(
+      "Are you sure you want to close this ticket?"
+    );
+    if (!confirm) return; // optional: can replace with a custom toast modal
     try {
       await axios.put(
         `${API_BASE}/support/${id}/answer`,
@@ -103,8 +112,10 @@ const Support = () => {
         { headers: { Authorization: `Bearer ${token}` }, withCredentials: true }
       );
       fetchTickets();
+      toast("Ticket closed successfully!", "success");
     } catch (err) {
       console.error("Error closing ticket", err);
+      toast("Failed to close ticket", "error");
     }
   };
 
@@ -157,7 +168,6 @@ const Support = () => {
       {/* Stats Cards */}
       {currentUser?.role === "admin" && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          {/* same stats cards as before */}
           <div className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition text-center">
             <h3 className="text-lg font-semibold text-gray-700">Total</h3>
             <p className="text-2xl font-bold text-purple-600">{total}</p>

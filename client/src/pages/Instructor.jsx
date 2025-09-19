@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
 import Loader from "../components/Loader";
+import { toast } from "../components/Toaster"; // import your toast function
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 const Instructors = ({ user }) => {
   const [instructors, setInstructors] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,12 +16,14 @@ const Instructors = ({ user }) => {
   const currentUser = user || JSON.parse(localStorage.getItem("user")) || null;
 
   const fetchInstructors = async () => {
+    setLoading(true);
     try {
       const { data } = await axios.get(`${API_BASE}/instructors`);
       setInstructors(data);
-      setLoading(false);
     } catch (err) {
       console.error("Error fetching instructors", err);
+      toast("Failed to fetch instructors", "error");
+    } finally {
       setLoading(false);
     }
   };
@@ -28,15 +33,21 @@ const Instructors = ({ user }) => {
   }, []);
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this instructor?"))
-      return;
     try {
+      // Optionally, you can have a custom confirmation toast/modal before deleting
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this instructor?"
+      );
+      if (!confirmDelete) return;
+
       await axios.delete(`${API_BASE}/instructors/${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       setInstructors(instructors.filter((i) => i._id !== id));
+      toast("Instructor deleted successfully", "success");
     } catch (err) {
       console.error("Error deleting instructor", err);
+      toast("Failed to delete instructor", "error");
     }
   };
 
@@ -47,7 +58,11 @@ const Instructors = ({ user }) => {
   };
 
   const handleEditSubmit = async () => {
-    if (!newName) return alert("Name cannot be empty");
+    if (!newName.trim()) {
+      toast("Name cannot be empty", "error");
+      return;
+    }
+
     try {
       await axios.put(
         `${API_BASE}/instructors/${editInstructor._id}`,
@@ -59,8 +74,10 @@ const Instructors = ({ user }) => {
       fetchInstructors();
       setShowEditModal(false);
       setEditInstructor(null);
+      toast("Instructor updated successfully", "success");
     } catch (err) {
       console.error("Error editing instructor", err);
+      toast("Failed to update instructor", "error");
     }
   };
 

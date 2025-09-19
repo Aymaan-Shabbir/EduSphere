@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Loader from "../components/Loader";
+import { toast } from "../components/Toaster"; // Import toast
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 const Courses = ({ user }) => {
   const [courses, setCourses] = useState([]);
-  // courses the user is enrolled in
   const [enrolledIds, setEnrolledIds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -25,11 +27,11 @@ const Courses = ({ user }) => {
     "Marketing",
     "Others",
   ];
-
   const normalizeCategory = (cat = "") =>
     cat.charAt(0).toUpperCase() + cat.slice(1).toLowerCase();
 
   const fetchCourses = async () => {
+    setLoading(true);
     try {
       const { data } = await axios.get(`${API_BASE}/courses`);
       setCourses(data.items || []);
@@ -40,10 +42,10 @@ const Courses = ({ user }) => {
         });
         setEnrolledIds(enrollRes.data.map((e) => e.course._id));
       }
-
-      setLoading(false);
     } catch (err) {
       console.error("Error fetching courses:", err);
+      toast("Failed to fetch courses", "error");
+    } finally {
       setLoading(false);
     }
   };
@@ -62,45 +64,58 @@ const Courses = ({ user }) => {
     if (!newTitle.trim()) return;
     try {
       await axios.put(
-        `${API_BASE}/${editCourse._id}`,
+        `${API_BASE}/courses/${editCourse._id}`,
         { title: newTitle },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      toast("Course updated successfully", "success");
       fetchCourses();
       setShowEditModal(false);
       setEditCourse(null);
     } catch (err) {
       console.error("Error editing course:", err);
+      toast("Failed to update course", "error");
     }
   };
 
-  const handleDelete = (courseId) => {
-    if (!window.confirm("Are you sure you want to delete this course?")) return;
-    axios
-      .delete(`${API_BASE}/courses/${courseId}`, {
+  const handleDelete = async (courseId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this course?"
+    );
+    if (!confirmed) return;
+
+    try {
+      await axios.delete(`${API_BASE}/courses/${courseId}`, {
         headers: { Authorization: `Bearer ${token}` },
-      })
-      .then(() => setCourses(courses.filter((c) => c._id !== courseId)))
-      .catch((err) => console.error("Error deleting course:", err));
+      });
+      setCourses(courses.filter((c) => c._id !== courseId));
+      toast("Course deleted successfully", "success");
+    } catch (err) {
+      console.error("Error deleting course:", err);
+      toast("Failed to delete course", "error");
+    }
   };
 
   const handleEnroll = async (courseId) => {
-    if (!token) return alert("Please login to enroll");
+    if (!token) {
+      toast("Please login to enroll", "error");
+      return;
+    }
 
     try {
       await axios.post(
-        "${API_BASE}/enrollments",
+        `${API_BASE}/enrollments`,
         { courseId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      alert("Enrolled successfully!");
+      toast("Enrolled successfully!", "success");
       setEnrolledIds([...enrolledIds, courseId]);
     } catch (err) {
       console.error(
         "Error enrolling course:",
         err.response?.data || err.message
       );
-      alert("Error enrolling course");
+      toast("Failed to enroll in course", "error");
     }
   };
 
@@ -120,6 +135,7 @@ const Courses = ({ user }) => {
         Courses Available
       </h1>
 
+      {/* Search & Category Filter */}
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         <input
           type="text"
@@ -141,6 +157,7 @@ const Courses = ({ user }) => {
         </select>
       </div>
 
+      {/* Courses Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredCourses.map((course) => (
           <div
@@ -168,6 +185,7 @@ const Courses = ({ user }) => {
               </p>
             </div>
 
+            {/* Admin Actions */}
             {currentUser?.role === "admin" && (
               <div className="flex gap-2 mt-4">
                 <button
@@ -185,6 +203,7 @@ const Courses = ({ user }) => {
               </div>
             )}
 
+            {/* User Enroll Button */}
             {currentUser?.role === "user" &&
               !enrolledIds.includes(course._id) && (
                 <button

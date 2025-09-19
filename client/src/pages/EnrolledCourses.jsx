@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import EnrolledCoursesTable from "../components/EnrolledCoursesTable"; // Admin table
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
 import Loader from "../components/Loader";
+import { toast } from "../components/Toaster"; // import toast
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 const EnrolledPage = ({ user }) => {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,12 +33,13 @@ const EnrolledPage = ({ user }) => {
         }
 
         setEnrolledCourses(res.data);
-        setLoading(false);
       } catch (err) {
         console.error(
           "Error fetching enrollments:",
           err.response?.data || err.message
         );
+        toast("Failed to fetch enrollments", "error");
+      } finally {
         setLoading(false);
       }
     };
@@ -45,7 +49,10 @@ const EnrolledPage = ({ user }) => {
 
   // Un-enroll from a course (only for regular users)
   const handleUnenroll = async (courseId) => {
-    if (!token) return alert("Please login to un-enroll");
+    if (!token) {
+      toast("Please login to un-enroll", "error");
+      return;
+    }
 
     try {
       const res = await axios.post(
@@ -55,10 +62,10 @@ const EnrolledPage = ({ user }) => {
       );
 
       setEnrolledCourses(enrolledCourses.filter((c) => c._id !== courseId));
-      alert(res.data.message);
+      toast(res.data.message || "Unenrolled successfully", "success");
     } catch (err) {
       console.error("Error unenrolling:", err.response?.data || err.message);
-      alert("Error unenrolling course");
+      toast("Failed to un-enroll course", "error");
     }
   };
 
@@ -132,7 +139,7 @@ const EnrolledPage = ({ user }) => {
           <div
             key={course?._id}
             className="relative rounded-2xl p-6 border shadow-md backdrop-blur-lg bg-white/30 
-                      hover:shadow-2xl hover:bg-white/40 transition-all duration-300"
+                          hover:shadow-2xl hover:bg-white/40 transition-all duration-300"
           >
             {/* Glassmorphism Shine */}
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/40 to-transparent opacity-30 pointer-events-none"></div>
