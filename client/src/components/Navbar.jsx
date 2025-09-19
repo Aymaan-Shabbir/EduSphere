@@ -11,7 +11,7 @@ const Navbar = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setIsOpen(false);
-    window.location.href = "/login";
+    window.location.href = "/";
   };
 
   const closeMenu = () => setIsOpen(false);
