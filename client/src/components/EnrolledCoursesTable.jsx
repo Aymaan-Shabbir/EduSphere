@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 const EnrolledCoursesTable = () => {
   const [enrollments, setEnrollments] = useState([]);
   const token = localStorage.getItem("token");
@@ -8,10 +8,9 @@ const EnrolledCoursesTable = () => {
   useEffect(() => {
     const fetchEnrollments = async () => {
       try {
-        const { data } = await axios.get(
-          "http://localhost:8080/api/v1/enrollments",
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const { data } = await axios.get(`${API_BASE}/enrollments`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setEnrollments(data);
       } catch (err) {
         console.error(

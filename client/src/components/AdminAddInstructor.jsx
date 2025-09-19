@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 const AddInstructor = () => {
   const [form, setForm] = useState({ name: "", email: "", bio: "" });
 
@@ -18,7 +18,7 @@ const AddInstructor = () => {
     }
 
     try {
-      await axios.post("http://localhost:8080/api/v1/instructors", form, {
+      await axios.post(`${API_BASE}/instructors`, form, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

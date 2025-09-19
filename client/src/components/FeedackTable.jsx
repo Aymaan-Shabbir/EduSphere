@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 const FeedbackTable = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,7 +9,7 @@ const FeedbackTable = () => {
   useEffect(() => {
     const fetchFeedbacks = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/api/v1/feedback", {
+        const res = await axios.get(`${API_BASE}/feedback`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setFeedbacks(res.data);

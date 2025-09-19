@@ -34,10 +34,9 @@ const Courses = ({ user }) => {
       setCourses(data.items || []);
 
       if (currentUser?.role !== "admin" && token) {
-        const enrollRes = await axios.get(
-          "http://localhost:8080/api/v1/enrollments/me",
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const enrollRes = await axios.get(`${API_BASE}/enrollments/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setEnrolledIds(enrollRes.data.map((e) => e.course._id));
       }
 

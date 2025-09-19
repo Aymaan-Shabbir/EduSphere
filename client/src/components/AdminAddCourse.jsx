@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 const AddCourse = ({ onClose }) => {
   const [form, setForm] = useState({
     title: "",
@@ -17,7 +17,7 @@ const AddCourse = ({ onClose }) => {
   useEffect(() => {
     const fetchInstructors = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/api/v1/instructors");
+        const res = await axios.get(`${API_BASE}/instructors`);
         setInstructors(res.data);
       } catch (err) {
         console.error("Error fetching instructors:", err);
@@ -42,7 +42,7 @@ const AddCourse = ({ onClose }) => {
     }
 
     try {
-      await axios.post("http://localhost:8080/api/v1/courses", form, {
+      await axios.post(`${API_BASE}/courses`, form, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

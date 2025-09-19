@@ -4,6 +4,7 @@ import AddCourse from "../components/AdminAddCourse";
 import FeedbackTable from "../components/FeedackTable";
 import EnrolledCoursesTable from "../components/EnrolledCoursesTable";
 import axios from "axios";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 import {
   PieChart,
   Pie,
@@ -26,7 +27,7 @@ const AdminDashboard = () => {
       setLoading(true);
       try {
         const { data } = await axios.get(
-          "http://localhost:8080/api/v1/feedback",
+          `${API_BASE}/feedback`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
