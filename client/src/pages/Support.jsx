@@ -14,19 +14,22 @@ const Support = () => {
 
   const currentUser = JSON.parse(localStorage.getItem("user")) || null;
   const token = localStorage.getItem("token");
-
+  const API_BASE = import.meta.env.VITE_API_BASE_URL;
   // Fetch tickets
   const fetchTickets = async () => {
     setLoading(true);
+    // first get the url, for adnmin or for user
     try {
       let url = "";
       if (currentUser?.role === "admin") {
-        url = `http://localhost:8080/api/v1/support${
+        url = `${API_BASE}/support${
           statusFilter !== "all" ? `?status=${statusFilter}` : ""
         }`;
+        //for admin
       } else {
-        url = "http://localhost:8080/api/v1/support/me";
+        url = `${API_BASE}/support/me`;
       }
+      // for user
 
       const { data } = await axios.get(url, {
         headers: { Authorization: `Bearer ${token}` },
@@ -48,7 +51,7 @@ const Support = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8080/api/v1/support", query, {
+      await axios.post(`${API_BASE}/support`, query, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
@@ -78,7 +81,7 @@ const Support = () => {
     if (!adminResponse.trim()) return;
     try {
       await axios.put(
-        `http://localhost:8080/api/v1/support/${selectedTicket._id}/answer`,
+        `${API_BASE}/support/${selectedTicket._id}/answer`,
         { adminResponse, status: "answered" },
         { headers: { Authorization: `Bearer ${token}` }, withCredentials: true }
       );
@@ -94,7 +97,7 @@ const Support = () => {
     if (!window.confirm("Are you sure you want to close this ticket?")) return;
     try {
       await axios.put(
-        `http://localhost:8080/api/v1/support/${id}/answer`,
+        `${API_BASE}/support/${id}/answer`,
         { status: "closed" },
         { headers: { Authorization: `Bearer ${token}` }, withCredentials: true }
       );

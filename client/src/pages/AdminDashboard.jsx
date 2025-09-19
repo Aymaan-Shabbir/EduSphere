@@ -80,13 +80,13 @@ const AdminDashboard = () => {
       <div className="flex flex-wrap gap-4 justify-center mb-6">
         <button
           onClick={() => setShowInstructorModal(true)}
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition"
+          className=" cursor-pointer bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition"
         >
           Add Instructor
         </button>
         <button
           onClick={() => setShowCourseModal(true)}
-          className="bg-green-600 text-white px-6 py-3 rounded-lg shadow hover:bg-green-700 transition"
+          className="cursor-pointer bg-green-600 text-white px-6 py-3 rounded-lg shadow hover:bg-green-700 transition"
         >
           Add Course
         </button>
@@ -130,7 +130,7 @@ const AdminDashboard = () => {
             <h3 className="text-lg font-semibold">Total Feedbacks</h3>
             <span className="text-2xl">💬</span>
           </div>
-          <p className="text-3xl font-bold">{totalFeedbacks}</p>
+          <p className="text-5xl font-bold">{totalFeedbacks}</p>
           <p className="text-sm opacity-80 mt-1">All user feedback submitted</p>
         </div>
 
@@ -140,18 +140,18 @@ const AdminDashboard = () => {
             <h3 className="text-lg font-semibold">Average Rating</h3>
             <span className="text-2xl">⭐</span>
           </div>
-          <p className="text-3xl font-bold">{avgRating.toFixed(1)}</p>
+          <p className="text-5xl font-bold">{avgRating.toFixed(1)}</p>
           <p className="text-sm opacity-80 mt-1">Based on user feedback</p>
         </div>
 
         {/* Feedbacks per Course (Pie Chart) */}
-        <div className="bg-gradient-to-r from-yellow-400 to-yellow-800 text-white p-6 rounded-2xl shadow-lg transform hover:scale-105 transition">
+        <div className="bg-gradient-to-r from-yellow-400 to-yellow-800 text-white p-2 h-auto rounded-2xl shadow-lg transform hover:scale-105 transition">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-lg font-semibold">Feedbacks per Course</h3>
             <span className="text-2xl">📊</span>
           </div>
-          <div className="w-full h-40 mt-2">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="w-full h-50 my-2">
+            <ResponsiveContainer width="100%" height="90%">
               <PieChart>
                 <Pie
                   data={pieData}

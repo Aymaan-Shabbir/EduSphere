@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 const TopRated = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -8,9 +8,7 @@ const TopRated = () => {
   useEffect(() => {
     const fetchTopRated = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:8080/api/v1/courses/top-rated"
-        );
+        const res = await axios.get(`${API_BASE}/courses/top-rated`);
         setCourses(res.data); // backend already filters rating > 3
       } catch (err) {
         console.error("Error fetching top-rated courses:", err);

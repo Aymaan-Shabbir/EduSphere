@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 const Courses = ({ user }) => {
   const [courses, setCourses] = useState([]);
   // courses the user is enrolled in
@@ -30,7 +30,7 @@ const Courses = ({ user }) => {
 
   const fetchCourses = async () => {
     try {
-      const { data } = await axios.get("http://localhost:8080/api/v1/courses");
+      const { data } = await axios.get(`${API_BASE}/courses`);
       setCourses(data.items || []);
 
       if (currentUser?.role !== "admin" && token) {
@@ -62,7 +62,7 @@ const Courses = ({ user }) => {
     if (!newTitle.trim()) return;
     try {
       await axios.put(
-        `http://localhost:8080/api/v1/courses/${editCourse._id}`,
+        `${API_BASE}/${editCourse._id}`,
         { title: newTitle },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -77,7 +77,7 @@ const Courses = ({ user }) => {
   const handleDelete = (courseId) => {
     if (!window.confirm("Are you sure you want to delete this course?")) return;
     axios
-      .delete(`http://localhost:8080/api/v1/courses/${courseId}`, {
+      .delete(`${API_BASE}/courses/${courseId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => setCourses(courses.filter((c) => c._id !== courseId)))
@@ -89,7 +89,7 @@ const Courses = ({ user }) => {
 
     try {
       await axios.post(
-        "http://localhost:8080/api/v1/enrollments",
+        "${API_BASE}/enrollments",
         { courseId },
         { headers: { Authorization: `Bearer ${token}` } }
       );

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 const Instructors = ({ user }) => {
   const [instructors, setInstructors] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,9 +13,7 @@ const Instructors = ({ user }) => {
 
   const fetchInstructors = async () => {
     try {
-      const { data } = await axios.get(
-        "http://localhost:8080/api/v1/instructors"
-      );
+      const { data } = await axios.get(`${API_BASE}/instructors`);
       setInstructors(data);
       setLoading(false);
     } catch (err) {
@@ -32,7 +30,7 @@ const Instructors = ({ user }) => {
     if (!window.confirm("Are you sure you want to delete this instructor?"))
       return;
     try {
-      await axios.delete(`http://localhost:8080/api/v1/instructors/${id}`, {
+      await axios.delete(`${API_BASE}/instructors/${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       setInstructors(instructors.filter((i) => i._id !== id));
@@ -51,7 +49,7 @@ const Instructors = ({ user }) => {
     if (!newName) return alert("Name cannot be empty");
     try {
       await axios.put(
-        `http://localhost:8080/api/v1/instructors/${editInstructor._id}`,
+        `${API_BASE}/instructors/${editInstructor._id}`,
         { name: newName },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -112,13 +110,13 @@ const Instructors = ({ user }) => {
                     onClick={() => openEditModal(ins)}
                     className="flex-1 bg-[#B087CF] text-white px-4 py-2 rounded-lg hover:bg-[#9a6dc1] transition"
                   >
-                     Edit
+                    Edit
                   </button>
                   <button
                     onClick={() => handleDelete(ins._id)}
                     className="flex-1 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
                   >
-                     Delete
+                    Delete
                   </button>
                 </div>
               )}

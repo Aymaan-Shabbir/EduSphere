@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import EnrolledCoursesTable from "../components/EnrolledCoursesTable"; // Admin table
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 const EnrolledPage = ({ user }) => {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,12 +17,12 @@ const EnrolledPage = ({ user }) => {
         let res;
         if (currentUser?.role === "admin") {
           // Admin: get all enrollments
-          res = await axios.get("http://localhost:8080/api/v1/enrollments", {
+          res = await axios.get(`${API_BASE}/enrollments`, {
             headers: { Authorization: `Bearer ${token}` },
           });
         } else {
           // Regular user: get only their enrollments
-          res = await axios.get("http://localhost:8080/api/v1/enrollments/me", {
+          res = await axios.get(`${API_BASE}/enrollments/me`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           res.data = res.data.map((e) => e.course);
@@ -48,7 +48,7 @@ const EnrolledPage = ({ user }) => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/v1/enrollments",
+        `${API_BASE}/enrollments`,
         { courseId }, // toggle endpoint
         { headers: { Authorization: `Bearer ${token}` } }
       );

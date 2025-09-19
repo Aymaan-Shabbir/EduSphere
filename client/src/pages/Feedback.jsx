@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import FeedbackTable from "../components/FeedackTable";
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 const FeedbackPage = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,12 +28,9 @@ const FeedbackPage = () => {
   const fetchAllFeedbacks = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get(
-        "http://localhost:8080/api/v1/feedback",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const { data } = await axios.get(`${API_BASE}/feedback`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setFeedbacks(data);
     } catch (err) {
       console.error("Error fetching feedbacks", err);
@@ -57,10 +54,9 @@ const FeedbackPage = () => {
   const fetchEnrolledCourses = async () => {
     setLoading(true); // start loading
     try {
-      const { data } = await axios.get(
-        "http://localhost:8080/api/v1/enrollments/me",
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const { data } = await axios.get(`${API_BASE}/enrollments/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setEnrolledCourses(data.map((e) => e.course));
     } catch (err) {
       console.error("Error fetching enrolled courses:", err);
@@ -75,7 +71,7 @@ const FeedbackPage = () => {
       const rating = Number(courseRating[courseId]) || 0;
 
       await axios.post(
-        "http://localhost:8080/api/v1/feedback",
+        `${API_BASE}/feedback`,
         { courseId, message, rating },
         { headers: { Authorization: `Bearer ${token}` } }
       );
