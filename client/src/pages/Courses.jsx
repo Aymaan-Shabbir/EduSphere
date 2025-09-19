@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Loader from "../components/Loader";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 const Courses = ({ user }) => {
   const [courses, setCourses] = useState([]);
@@ -103,8 +104,7 @@ const Courses = ({ user }) => {
     }
   };
 
-  if (loading)
-    return <p className="text-center text-lg mt-10">Loading courses...</p>;
+  if (loading) return <Loader />;
 
   const filteredCourses = courses.filter((course) => {
     const normalizedCategory = normalizeCategory(course.category);
