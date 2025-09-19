@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
+import Loader from "../components/Loader";
 const Instructors = ({ user }) => {
   const [instructors, setInstructors] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -63,7 +64,7 @@ const Instructors = ({ user }) => {
     }
   };
 
-  if (loading) return <p>Loading instructors...</p>;
+  if (loading) return <Loader />;
 
   return (
     <div className="p-8">

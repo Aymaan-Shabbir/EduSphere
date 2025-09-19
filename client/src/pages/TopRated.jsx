@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
+import Loader from "../components/Loader";
 const TopRated = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,7 +21,7 @@ const TopRated = () => {
     fetchTopRated();
   }, []);
 
-  if (loading) return <p>Loading top-rated courses...</p>;
+  if (loading) return <Loader />;
 
   return (
     <div className="p-5 ">

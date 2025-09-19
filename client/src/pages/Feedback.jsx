@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import FeedbackTable from "../components/FeedackTable";
+import Loader from "../components/Loader";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 const FeedbackPage = () => {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -86,7 +87,7 @@ const FeedbackPage = () => {
     }
   };
 
-  if (loading) return <p className="p-6 text-gray-500">Loading feedbacks...</p>;
+  if (loading) return <Loader />;
 
   // ================= Admin View =================
   if (currentUser?.role === "admin") {

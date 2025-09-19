@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Loader from "./Loader";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 const FeedbackTable = () => {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -25,10 +26,7 @@ const FeedbackTable = () => {
     fetchFeedbacks();
   }, [token]);
 
-  if (loading)
-    return (
-      <p className="p-6 text-gray-500 text-center">Loading feedbacks...</p>
-    );
+  if (loading) return <Loader />;
 
   if (feedbacks.length === 0)
     return (

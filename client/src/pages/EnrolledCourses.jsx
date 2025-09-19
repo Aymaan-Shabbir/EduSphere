@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import EnrolledCoursesTable from "../components/EnrolledCoursesTable"; // Admin table
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
+import Loader from "../components/Loader";
 const EnrolledPage = ({ user }) => {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -61,8 +62,7 @@ const EnrolledPage = ({ user }) => {
     }
   };
 
-  if (loading)
-    return <p className="p-6 text-gray-500">Loading enrollments...</p>;
+  if (loading) return <Loader />;
 
   if (!enrolledCourses.length)
     return (

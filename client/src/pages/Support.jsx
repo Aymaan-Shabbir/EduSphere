@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Loader from "../components/Loader";
 
 const Support = () => {
   const [query, setQuery] = useState({ subject: "", message: "" });
@@ -107,8 +108,7 @@ const Support = () => {
     }
   };
 
-  if (loading)
-    return <p className="p-6 text-gray-500">Loading support tickets...</p>;
+  if (loading) return <Loader />;
 
   // Ticket counts
   const total = tickets.length;
