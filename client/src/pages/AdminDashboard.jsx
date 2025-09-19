@@ -26,12 +26,9 @@ const AdminDashboard = () => {
     const fetchFeedbacks = async () => {
       setLoading(true);
       try {
-        const { data } = await axios.get(
-          `${API_BASE}/feedback`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const { data } = await axios.get(`${API_BASE}/feedback`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setFeedbacks(data);
       } catch (err) {
         console.error(
@@ -160,7 +157,7 @@ const AdminDashboard = () => {
                   nameKey="name"
                   cx="50%"
                   cy="50%"
-                  outerRadius={60}
+                  outerRadius={40}
                   label
                 >
                   {pieData.map((entry, index) => (
