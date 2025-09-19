@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import api from "../api/axios";
 import { Link } from "react-router-dom";
 import { FiUser, FiLock } from "react-icons/fi";
+import { toast } from "../components/Toaster"; // import toast function
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -16,10 +17,14 @@ export default function LoginPage() {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      alert(`Welcome ${res.data.user.role}!`);
+      // Use toast instead of alert
+      toast(`Welcome ${res.data.user.role}!`, "success");
+
       window.location.href = "/home";
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      const msg = err.response?.data?.message || "Login failed";
+      setError(msg);
+      toast(msg, "error"); // show error in toaster
     }
   };
 

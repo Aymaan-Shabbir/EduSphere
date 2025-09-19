@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import api from "../api/axios";
 import { Link } from "react-router-dom";
 import { FiUser, FiMail, FiLock } from "react-icons/fi";
+import { toast } from "../components/Toaster"; // import toast
 
 export default function SignupPage() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -14,15 +15,21 @@ export default function SignupPage() {
     e.preventDefault();
 
     if (!form.email.endsWith("@gmail.com")) {
-      return setError("Only @gmail.com emails are allowed.");
+      const msg = "Only @gmail.com emails are allowed.";
+      setError(msg);
+      toast(msg, "error");
+      return;
     }
 
     try {
       await api.post("/auth/signup", form);
-      alert("Signup successful, please login.");
+      const msg = "Signup successful, please login.";
+      toast(msg, "success");
       window.location.href = "/login";
     } catch (err) {
-      setError(err.response?.data?.message || "Signup failed");
+      const msg = err.response?.data?.message || "Signup failed";
+      setError(msg);
+      toast(msg, "error");
     }
   };
 
